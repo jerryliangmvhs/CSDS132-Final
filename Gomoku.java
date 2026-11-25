@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 public class Gomoku extends Application {
 
     private boolean turn = true;
+    private boolean gameEnded = false;
     private int winRequirement;
     private int boardHeight;
     private int boardWidth;
@@ -98,6 +99,14 @@ public class Gomoku extends Application {
         return boardWidth;
     }
 
+    public boolean getGameEnded() {
+        return gameEnded;
+    }
+
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
+    }
+
     public boolean hasExactConsecutiveTiles(Button[][] pieces, int row, int col, int targetStreak) {
         for(int i = 0; i < directions.length; i++) {
             if(numberInLine(pieces,row,col,directions[i]) == targetStreak){
@@ -105,6 +114,15 @@ public class Gomoku extends Application {
             }
         }
         return false;
+    }
+
+    public void displayWinner (boolean turn) {
+        if(turn) {
+            System.out.println("white won.");
+        }
+        else{
+            System.out.println("black won.");
+        }
     }
 
     public boolean hasConsecutiveTilesMinusOne(Button[][] pieces, int row, int col, int targetStreak) {
@@ -201,8 +219,9 @@ public class Gomoku extends Application {
 
         public void handle(ActionEvent e) {
             Button buttonClicked = (Button)e.getSource();
+            boolean previousTurn = Gomoku.this.getTurn();
 
-            if(buttonClicked.getBackground().equals(emptySpace)){
+            if(buttonClicked.getBackground().equals(emptySpace) && !getGameEnded()){
                 if(Gomoku.this.getTurn()){
                     buttonClicked.setBackground(whitePiece);
                     Gomoku.this.switchPlayer();
@@ -212,7 +231,10 @@ public class Gomoku extends Application {
                     Gomoku.this.switchPlayer();
                 }
             }
-            System.out.println("5 in a row: " + Gomoku.this.hasExactConsecutiveTiles(getPieces(),buttonRow,buttonCol,getWinRequirement()));
+            if(Gomoku.this.hasExactConsecutiveTiles(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
+                setGameEnded(true);
+                displayWinner(previousTurn);
+            }
         }
     }
 
