@@ -23,6 +23,7 @@ public class Gomoku extends Application {
     private Background emptySpace = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)));
     private Background blackPiece = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)), new BackgroundFill(Color.BLACK, new CornerRadii(20), new Insets(0.5)));
     private Background whitePiece = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)), new BackgroundFill(Color.WHITE, new CornerRadii(20), new Insets(0.5)));
+    private String[] directions = {"north","northwest","west","southwest","south","southeast","east","northeast"};
 
     public void start(Stage primaryStage) {
         setBoardHeight(19);
@@ -66,7 +67,7 @@ public class Gomoku extends Application {
     }
 
     public boolean getTurn() {
-        return turn;
+       return turn;
     }
 
     public void setWinRequirement(int requirement) {
@@ -97,23 +98,95 @@ public class Gomoku extends Application {
         return boardWidth;
     }
 
-    public boolean hasExactConsecutiveTiles(Button[][] board, int row, int col, int targetStreak) {
+    public boolean hasExactConsecutiveTiles(Button[][] pieces, int row, int col, int targetStreak) {
+        for(int i = 0; i < directions.length; i++) {
+            if(numberInLine(pieces,row,col,directions[i]) == targetStreak){
+                return true;
+            }
+        }
         return false;
     }
 
-    public boolean hasConsecutiveTilesMinusOne(Button[][] board, int row, int col, int targetStreak) {
+    public boolean hasConsecutiveTilesMinusOne(Button[][] pieces, int row, int col, int targetStreak) {
         return false;
     }
 
-    public boolean hasConsecutiveTilesMinusTwo(Button[][] board, int row, int col, int targetStreak) {
+    public boolean hasConsecutiveTilesMinusTwo(Button[][] pieces, int row, int col, int targetStreak) {
         return false;
     }
 
-    public int numberInLine(Button[][] board, int row, int col, String direction){
-        return -1;
+    public boolean matchingBackgrounds (Button piece1, Button piece2) {
+        return piece1.getBackground().equals(piece2.getBackground());
     }
 
-    public boolean isOpen(Button[][] board, int row, int col, String direction){
+    public int numberInLine(Button[][] pieces, int row, int col, String direction){
+        int numberInLine = 0;
+        Button referencePiece = pieces[row][col];
+
+        if(direction.equals("west")){
+            for(int colPointer = col; colPointer >= 0 && matchingBackgrounds(referencePiece,pieces[row][colPointer]); colPointer--){
+                numberInLine++;
+            }
+        }
+        else if(direction.equals("southwest")){
+            int rowPointer = row;
+            int colPointer = col;
+
+            while(rowPointer < pieces.length && colPointer >= 0 && matchingBackgrounds(referencePiece,pieces[rowPointer][colPointer])){
+                numberInLine++;
+                rowPointer++;
+                colPointer--;
+            }
+        }
+        else if(direction.equals("south")){
+            for(int rowPointer = row; rowPointer < pieces.length && matchingBackgrounds(referencePiece,pieces[rowPointer][col]); rowPointer++){
+                numberInLine++;
+            }
+        }
+        else if(direction.equals("southeast")){
+            int rowPointer = row;
+            int colPointer = col;
+
+            while(rowPointer < pieces.length && colPointer < pieces[row].length && matchingBackgrounds(referencePiece,pieces[rowPointer][colPointer])){
+                numberInLine++;
+                rowPointer++;
+                colPointer++;
+            }
+        }
+        else if(direction.equals("east")){
+            for(int colPointer = col; colPointer < pieces[row].length && matchingBackgrounds(referencePiece,pieces[row][colPointer]); colPointer++){
+                numberInLine++;
+            }
+        }
+        else if(direction.equals("northeast")){
+            int rowPointer = row;
+            int colPointer = col;
+
+            while(rowPointer >= 0 && colPointer < pieces[row].length && matchingBackgrounds(referencePiece,pieces[rowPointer][colPointer])){
+                numberInLine++;
+                rowPointer--;
+                colPointer++;
+            }
+        }
+        else if(direction.equals("north")){
+            for(int rowPointer = row; rowPointer >=0 && matchingBackgrounds(referencePiece,pieces[rowPointer][col]); rowPointer--){
+                numberInLine++;
+            }
+        }
+        else if(direction.equals("northwest")){
+            int rowPointer = row;
+            int colPointer = col;
+
+            while(rowPointer >= 0 && colPointer >= 0 && matchingBackgrounds(referencePiece,pieces[rowPointer][colPointer])){
+                numberInLine++;
+                rowPointer--;
+                colPointer--;
+            }
+        }
+        return numberInLine;
+    }
+
+    public boolean isOpen(Button[][] pieces, int row, int col, String direction){
         return false;
     }
 
@@ -128,16 +201,18 @@ public class Gomoku extends Application {
 
         public void handle(ActionEvent e) {
             Button buttonClicked = (Button)e.getSource();
-            System.out.println("Row: " + buttonRow + "Col: " + buttonCol);
 
-            if(Gomoku.this.getTurn() && buttonClicked.getBackground().equals(emptySpace)){
-                buttonClicked.setBackground(whitePiece);
-                Gomoku.this.switchPlayer();
+            if(buttonClicked.getBackground().equals(emptySpace)){
+                if(Gomoku.this.getTurn()){
+                    buttonClicked.setBackground(whitePiece);
+                    Gomoku.this.switchPlayer();
+                }
+                else if(!Gomoku.this.getTurn()){
+                    buttonClicked.setBackground(blackPiece);
+                    Gomoku.this.switchPlayer();
+                }
             }
-            else if(!Gomoku.this.getTurn() && buttonClicked.getBackground().equals(emptySpace)){
-                buttonClicked.setBackground(blackPiece);
-                Gomoku.this.switchPlayer();
-            }
+            System.out.println("5 in a row: " + Gomoku.this.hasExactConsecutiveTiles(getPieces(),buttonRow,buttonCol,getWinRequirement()));
         }
     }
 
