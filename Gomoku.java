@@ -9,13 +9,17 @@ import javafx.stage.Stage;
 
 public class Gomoku extends Application {
 
-    private int turn;
+    private boolean turn = true;
     private int winRequirement;
-    private int boardLength;
+    private int boardHeight;
     private int boardWidth;
+    private Button[][] board;
 
     public void start(Stage primaryStage) {
-
+        setBoardHeight(19);
+        setBoardWidth(19);
+        setWinRequirement(5);
+        board = new Button[getBoardHeight()][getBoardWidth()];
     }
 
     public static void main(String[] args) {
@@ -23,18 +27,51 @@ public class Gomoku extends Application {
     }
 
     public void switchPlayer() {
-
+        if(turn) {
+            turn = false;
+        }
+        else if(!turn) {
+            turn = true;
+        }
     }
 
-    public boolean FiveInARow(Button[][] board, int row, int col, int targetStreak) {
+    public void setWinRequirement(int requirement) {
+        this.winRequirement = requirement;
+    }
+
+    public void setBoardHeight(int boardHeight) {
+        this.boardHeight = boardHeight;
+    }
+
+    public void setBoardWidth(int boardWidth) {
+        this.boardWidth = boardWidth;
+    }
+
+    public Button[][] getBoard() {
+        return board;
+    }
+
+    public int getWinRequirement() {
+        return winRequirement;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
+    }
+
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public boolean hasExactConsecutiveTiles(Button[][] board, int row, int col, int targetStreak) {
         return false;
     }
 
-    public boolean fourFour(Button[][] board, int row, int col, int targetStreak) {
+    public boolean hasConsecutiveTilesMinusOne(Button[][] board, int row, int col, int targetStreak) {
         return false;
     }
 
-    public boolean threeThree(Button[][] board, int row, int col, int targetStreak) {
+    public boolean hasConsecutiveTilesMinusTwo(Button[][] board, int row, int col, int targetStreak) {
         return false;
     }
 
