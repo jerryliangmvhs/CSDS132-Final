@@ -6,7 +6,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -41,7 +40,7 @@ public class Gomoku extends Application {
                 pieces[row][col].setMaxSize(50,50);
                 pieces[row][col].setBackground(new Background(emptySpace));
                 pieces[row][col].setOnAction(new GameMove(row,col));
-                board.add(pieces[row][col],row+1,col+1);
+                board.add(pieces[row][col],col+1,row+1);
             }
         }
 
@@ -128,10 +127,12 @@ public class Gomoku extends Application {
 
         public void handle(ActionEvent e) {
             Button buttonClicked = (Button)e.getSource();
-            if(Gomoku.this.getTurn()){
+            System.out.println("Row: " + buttonRow + "Col: " + buttonCol);
+
+            if(Gomoku.this.getTurn() && buttonClicked.getBackground().equals(new Background(emptySpace))){
                 buttonClicked.setBackground(new Background(emptySpace, whitePiece));
             }
-            else if(!Gomoku.this.getTurn()){
+            else if(!Gomoku.this.getTurn() && buttonClicked.getBackground().equals(new Background(emptySpace))){
                 buttonClicked.setBackground(new Background(emptySpace, blackPiece));
             }
             Gomoku.this.switchPlayer();
