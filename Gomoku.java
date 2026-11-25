@@ -21,7 +21,9 @@ public class Gomoku extends Application {
     private Scene scene;
     private BorderPane gui;
     private GridPane board;
-    //private GameMove gameMove;
+    private BackgroundFill emptySpace = new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5));
+    private BackgroundFill blackPiece = new BackgroundFill(Color.BLACK, new CornerRadii(20), new Insets(0.5));
+    private BackgroundFill whitePiece = new BackgroundFill(Color.WHITE, new CornerRadii(20), new Insets(0.5));
 
     public void start(Stage primaryStage) {
         setBoardHeight(19);
@@ -30,7 +32,6 @@ public class Gomoku extends Application {
         pieces = new Button[getBoardHeight()][getBoardWidth()];
         gui = new BorderPane();
         board = new GridPane();
-        //gameMove = new GameMove();
 
         for(int row = 0; row < pieces.length; row++) {
             for(int col = 0; col < pieces[row].length; col++) {
@@ -38,7 +39,7 @@ public class Gomoku extends Application {
                 pieces[row][col].setMinSize(10,10);
                 pieces[row][col].setPrefSize(30,30);
                 pieces[row][col].setMaxSize(50,50);
-                pieces[row][col].setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5))));
+                pieces[row][col].setBackground(new Background(emptySpace));
                 pieces[row][col].setOnAction(new GameMove(row,col));
                 board.add(pieces[row][col],row+1,col+1);
             }
@@ -128,10 +129,10 @@ public class Gomoku extends Application {
         public void handle(ActionEvent e) {
             Button buttonClicked = (Button)e.getSource();
             if(Gomoku.this.getTurn()){
-                buttonClicked.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, new Insets(0.5))));
+                buttonClicked.setBackground(new Background(emptySpace, whitePiece));
             }
             else if(!Gomoku.this.getTurn()){
-                buttonClicked.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0.5))));
+                buttonClicked.setBackground(new Background(emptySpace, blackPiece));
             }
             Gomoku.this.switchPlayer();
         }
