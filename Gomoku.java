@@ -110,6 +110,17 @@ public class Gomoku extends Application {
     public boolean hasExactConsecutiveTiles(Button[][] pieces, int row, int col, int targetStreak) {
         for(int i = 0; i < directions.length; i++) {
             if(numberInLine(pieces,row,col,directions[i]) == targetStreak){
+                if(!hasOverline(pieces,row,col,targetStreak+1)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean hasOverline(Button[][] pieces, int row, int col, int targetStreak) {
+        for(int i = 0; i < directions.length; i++) {
+            if(numberInLine(pieces,row,col,directions[i]) >= targetStreak){
                 return true;
             }
         }
