@@ -24,7 +24,7 @@ public class Gomoku extends Application {
     private Background emptySpace = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)));
     private Background blackPiece = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)), new BackgroundFill(Color.BLACK, new CornerRadii(20), new Insets(0.5)));
     private Background whitePiece = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)), new BackgroundFill(Color.WHITE, new CornerRadii(20), new Insets(0.5)));
-    private String[] directions = {"north","northwest","west","southwest","south","southeast","east","northeast"};
+    private String[] directions = {"north","south","west","east","southeast","northwest","southwest","northeast"};
 
     public void start(Stage primaryStage) {
         setBoardHeight(19);
@@ -108,19 +108,21 @@ public class Gomoku extends Application {
     }
 
     public boolean hasExactConsecutiveTiles(Button[][] pieces, int row, int col, int targetStreak) {
-        for(int i = 0; i < directions.length; i++) {
-            if(numberInLine(pieces,row,col,directions[i]) == targetStreak){
+        for(int i = 0; i < directions.length; i+=2) {
+            if(numberInLine(pieces,row,col,directions[i]) + numberInLine(pieces,row,col,directions[i+1]) - 1 == targetStreak){
+
                 if(!hasOverline(pieces,row,col,targetStreak+1)){
                     return true;
                 }
+
             }
         }
         return false;
     }
 
     public boolean hasOverline(Button[][] pieces, int row, int col, int targetStreak) {
-        for(int i = 0; i < directions.length; i++) {
-            if(numberInLine(pieces,row,col,directions[i]) >= targetStreak){
+        for(int i = 0; i < directions.length; i+=2) {
+            if(numberInLine(pieces,row,col,directions[i]) + numberInLine(pieces,row,col,directions[i+1]) - 1 == targetStreak){
                 return true;
             }
         }
