@@ -35,6 +35,7 @@ public class Gomoku extends Application {
         pieces = new Button[getBoardHeight()][getBoardWidth()];
         gui = new BorderPane();
         board = new GridPane();
+        gameMessageTextField.setEditable(false);
 
         for(int row = 0; row < pieces.length; row++) {
             for(int col = 0; col < pieces[row].length; col++) {
@@ -228,7 +229,7 @@ public class Gomoku extends Application {
         Button referencePiece = pieces[row][col];
         if(direction.equals("north")){
             int rowPointer = row;
-            while(rowPointer >= 0 && matchingBackgrounds(pieces[rowPointer][col], referencePiece)){
+            while(rowPointer > 0 && matchingBackgrounds(pieces[rowPointer][col], referencePiece)){
                rowPointer--;
             }
             if(pieces[rowPointer][col].getBackground().equals(emptySpace)){
@@ -258,7 +259,7 @@ public class Gomoku extends Application {
         }
         else if(direction.equals("west")){
             int colPointer = col;
-            while(colPointer >= 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(colPointer > 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
                 colPointer --;
             }
             if(pieces[row][colPointer].getBackground().equals(emptySpace)){
@@ -270,7 +271,7 @@ public class Gomoku extends Application {
             int rowPointer = row;
             int colPointer = col;
 
-            while(rowPointer >= 0 && colPointer >= 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(rowPointer > 0 && colPointer > 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
                 rowPointer--;
                 colPointer--;
             }
@@ -283,7 +284,7 @@ public class Gomoku extends Application {
             int rowPointer = row;
             int colPointer = col;
 
-            while(rowPointer >= 0 && colPointer < pieces[rowPointer].length && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(rowPointer > 0 && colPointer < pieces[rowPointer].length && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
                 rowPointer--;
                 colPointer++;
             }
@@ -296,7 +297,7 @@ public class Gomoku extends Application {
             int rowPointer = row;
             int colPointer = col;
 
-            while(rowPointer < pieces.length  && colPointer >= 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(rowPointer < pieces.length  && colPointer > 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
                 rowPointer ++;
                 colPointer --;
             }
