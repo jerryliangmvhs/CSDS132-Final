@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -24,7 +25,8 @@ public class Gomoku extends Application {
     private Background emptySpace = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)));
     private Background blackPiece = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)), new BackgroundFill(Color.BLACK, new CornerRadii(20), new Insets(0.5)));
     private Background whitePiece = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, new Insets(0.5)), new BackgroundFill(Color.WHITE, new CornerRadii(20), new Insets(0.5)));
-    private String[] directions = {"north","south","west","east","southeast","northwest","southwest","northeast"};
+    private String[] directions = {"north", "south", "west", "east", "southeast", "northwest", "southwest", "northeast"};
+    private TextField gameMessageTextField = new TextField("");
 
     public void start(Stage primaryStage) {
         setBoardHeight(19);
@@ -47,6 +49,7 @@ public class Gomoku extends Application {
         }
 
         gui.setCenter(board);
+        gui.setBottom(gameMessageTextField);
         scene = new Scene(gui);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Liang Jerry Gomoku Game");
@@ -107,6 +110,10 @@ public class Gomoku extends Application {
         this.gameEnded = gameEnded;
     }
 
+    public TextField getGameMessageTextField() {
+        return gameMessageTextField;
+    }
+
     public boolean hasExactConsecutiveTiles(Button[][] pieces, int row, int col, int targetStreak) {
         for(int i = 0; i < directions.length; i+=2) {
             if(numberInLine(pieces,row,col,directions[i]) + numberInLine(pieces,row,col,directions[i+1]) - 1 == targetStreak){
@@ -131,10 +138,10 @@ public class Gomoku extends Application {
 
     public void displayWinner (boolean turn) {
         if(turn) {
-            System.out.println("white won.");
+            getGameMessageTextField().setText("white won. game over.");
         }
         else{
-            System.out.println("black won.");
+            getGameMessageTextField().setText("black won. game over.");
         }
     }
 
@@ -218,6 +225,99 @@ public class Gomoku extends Application {
     }
 
     public boolean isOpen(Button[][] pieces, int row, int col, String direction){
+        Button referencePiece = pieces[row][col];
+        if(direction.equals("north")){
+            int rowPointer = row;
+            while(rowPointer >= 0 && matchingBackgrounds(pieces[rowPointer][col], referencePiece)){
+               rowPointer--;
+            }
+            if(pieces[rowPointer][col].getBackground().equals(emptySpace)){
+                return true;
+            }
+            return false;
+        }
+        else if(direction.equals("south")){
+            int rowPointer = row;
+            while(rowPointer < pieces.length && matchingBackgrounds(pieces[rowPointer][col], referencePiece)){
+                rowPointer ++;
+            }
+            if(pieces[rowPointer][col].getBackground().equals(emptySpace)){
+                return true;
+            }
+            return false;
+        }
+        else if(direction.equals("east")){
+            int colPointer = col;
+            while(colPointer < pieces[row].length && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+                colPointer ++;
+            }
+            if(pieces[row][colPointer].getBackground().equals(emptySpace)){
+                return true;
+            }
+            return false;
+        }
+        else if(direction.equals("west")){
+            int colPointer = col;
+            while(colPointer >= 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+                colPointer --;
+            }
+            if(pieces[row][colPointer].getBackground().equals(emptySpace)){
+                return true;
+            }
+            return false;
+        }
+        else if(direction.equals("northwest")){
+            int rowPointer = row;
+            int colPointer = col;
+
+            while(rowPointer >= 0 && colPointer >= 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+                rowPointer--;
+                colPointer--;
+            }
+            if(pieces[rowPointer][colPointer].getBackground().equals(emptySpace)){
+                return true;
+            }
+            return false;
+        }
+        else if(direction.equals("northeast")){
+            int rowPointer = row;
+            int colPointer = col;
+
+            while(rowPointer >= 0 && colPointer < pieces[rowPointer].length && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+                rowPointer--;
+                colPointer++;
+            }
+            if(pieces[rowPointer][colPointer].getBackground().equals(emptySpace)){
+                return true;
+            }
+            return false;
+        }
+        else if(direction.equals("southwest")){
+            int rowPointer = row;
+            int colPointer = col;
+
+            while(rowPointer < pieces.length  && colPointer >= 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+                rowPointer ++;
+                colPointer --;
+            }
+            if(pieces[rowPointer][colPointer].getBackground().equals(emptySpace)){
+                return true;
+            }
+            return false;
+        }
+        else if(direction.equals("southeast")){
+            int rowPointer = row;
+            int colPointer = col;
+
+            while(rowPointer < pieces.length && colPointer < pieces[rowPointer].length && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+                rowPointer ++;
+                colPointer ++;
+            }
+            if(pieces[rowPointer][colPointer].getBackground().equals(emptySpace)){
+                return true;
+            }
+            return false;
+        }
         return false;
     }
 
