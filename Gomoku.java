@@ -259,7 +259,7 @@ public class Gomoku extends Application {
         }
         else if(direction.equals("south")){
             int rowPointer = row;
-            while(rowPointer < pieces.length && matchingBackgrounds(pieces[rowPointer][col], referencePiece)){
+            while(rowPointer < pieces.length - 1 && matchingBackgrounds(pieces[rowPointer][col], referencePiece)){
                 rowPointer ++;
             }
             if(pieces[rowPointer][col].getBackground().equals(emptySpace)){
@@ -269,7 +269,7 @@ public class Gomoku extends Application {
         }
         else if(direction.equals("east")){
             int colPointer = col;
-            while(colPointer < pieces[row].length && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(colPointer < pieces[row].length - 1 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
                 colPointer ++;
             }
             if(pieces[row][colPointer].getBackground().equals(emptySpace)){
@@ -291,7 +291,7 @@ public class Gomoku extends Application {
             int rowPointer = row;
             int colPointer = col;
 
-            while(rowPointer > 0 && colPointer > 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(rowPointer > 0 && colPointer > 0 && matchingBackgrounds(pieces[rowPointer][colPointer],referencePiece)){
                 rowPointer--;
                 colPointer--;
             }
@@ -304,7 +304,7 @@ public class Gomoku extends Application {
             int rowPointer = row;
             int colPointer = col;
 
-            while(rowPointer > 0 && colPointer < pieces[rowPointer].length && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(rowPointer > 0 && colPointer < pieces[rowPointer].length - 1 && matchingBackgrounds(pieces[rowPointer][colPointer],referencePiece)){
                 rowPointer--;
                 colPointer++;
             }
@@ -317,7 +317,7 @@ public class Gomoku extends Application {
             int rowPointer = row;
             int colPointer = col;
 
-            while(rowPointer < pieces.length  && colPointer > 0 && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(rowPointer < pieces.length - 1  && colPointer > 0 && matchingBackgrounds(pieces[rowPointer][colPointer],referencePiece)){
                 rowPointer ++;
                 colPointer --;
             }
@@ -330,10 +330,11 @@ public class Gomoku extends Application {
             int rowPointer = row;
             int colPointer = col;
 
-            while(rowPointer < pieces.length && colPointer < pieces[rowPointer].length && matchingBackgrounds(pieces[row][colPointer],referencePiece)){
+            while(rowPointer < pieces.length - 1 && colPointer < pieces[rowPointer].length - 1 && matchingBackgrounds(pieces[rowPointer][colPointer],referencePiece)){
                 rowPointer ++;
                 colPointer ++;
             }
+            System.out.println(rowPointer + " " + colPointer);
             if(pieces[rowPointer][colPointer].getBackground().equals(emptySpace)){
                 return true;
             }
@@ -354,6 +355,7 @@ public class Gomoku extends Application {
         public void handle(ActionEvent e) {
             Button buttonClicked = (Button)e.getSource();
             boolean previousTurn = Gomoku.this.getTurn();
+            System.out.println("Row: " + buttonRow + "Col: " + buttonCol);
 
             if(buttonClicked.getBackground().equals(emptySpace) && !getGameEnded()){
                 if(Gomoku.this.getTurn()){
@@ -374,9 +376,6 @@ public class Gomoku extends Application {
             if(Gomoku.this.hasExactConsecutiveTiles(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
                 setGameEnded(true);
                 displayWinner(previousTurn);
-            }
-            else{
-                getGameMessageTextField().setText("");
             }
         }
     }
