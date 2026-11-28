@@ -346,36 +346,48 @@ public class Gomoku extends Application {
     private class GameMove implements EventHandler<ActionEvent> {
         private int buttonRow;
         private int buttonCol;
+        private boolean previousTurn;
+
 
         public GameMove(int buttonRow, int buttonCol) {
             this.buttonRow = buttonRow;
             this.buttonCol = buttonCol;
+            previousTurn = Gomoku.this.getTurn();
         }
 
         public void handle(ActionEvent e) {
+            previousTurn = Gomoku.this.getTurn();
             Button buttonClicked = (Button)e.getSource();
-            boolean previousTurn = Gomoku.this.getTurn();
             System.out.println("Row: " + buttonRow + "Col: " + buttonCol);
 
             if(buttonClicked.getBackground().equals(emptySpace) && !getGameEnded()){
                 if(Gomoku.this.getTurn()){
                     buttonClicked.setBackground(whitePiece);
-                    Gomoku.this.switchPlayer();
+                    validateMove(buttonClicked);
                 }
                 else if(!Gomoku.this.getTurn()){
                     buttonClicked.setBackground(blackPiece);
-                    Gomoku.this.switchPlayer();
+                    validateMove(buttonClicked);
                 }
             }
+
+        }
+
+        public void validateMove(Button button){
             if(Gomoku.this.hasThreeThree(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
                 getGameMessageTextField().setText("three three detected.");
+                button.setBackground(emptySpace);
             }
-            if(Gomoku.this.hasFourFour(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
+            else if(Gomoku.this.hasFourFour(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
                 getGameMessageTextField().setText("four four detected.");
+                button.setBackground(emptySpace);
             }
-            if(Gomoku.this.hasExactConsecutiveTiles(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
+            else if(Gomoku.this.hasExactConsecutiveTiles(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
                 setGameEnded(true);
                 displayWinner(previousTurn);
+            }
+            else{
+                Gomoku.this.switchPlayer();
             }
         }
     }
