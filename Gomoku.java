@@ -146,11 +146,31 @@ public class Gomoku extends Application {
         }
     }
 
-    public boolean hasConsecutiveTilesMinusOne(Button[][] pieces, int row, int col, int targetStreak) {
+    public boolean hasFourFour(Button[][] pieces, int row, int col, int targetStreak) {
+        int numberOfFours = 0;
+        for(int i = 0; i < directions.length; i+=2) {
+            if(numberInLine(pieces,row,col,directions[i]) + numberInLine(pieces,row,col,directions[i+1]) - 1 == targetStreak - 1){
+                numberOfFours ++;
+            }
+        }
+        if(numberOfFours >= 2){
+            return true;
+        }
         return false;
     }
 
-    public boolean hasConsecutiveTilesMinusTwo(Button[][] pieces, int row, int col, int targetStreak) {
+    public boolean hasThreeThree(Button[][] pieces, int row, int col, int targetStreak) {
+        int numberOfOpenThrees = 0;
+        for(int i = 0; i < directions.length; i+=2) {
+            if(numberInLine(pieces,row,col,directions[i]) + numberInLine(pieces,row,col,directions[i+1]) - 1 == targetStreak - 2){
+                if(isOpen(pieces,row,col,directions[i]) && isOpen(pieces,row,col,directions[i+1])){
+                    numberOfOpenThrees ++;
+                }
+            }
+        }
+        if(numberOfOpenThrees >= 2){
+            return true;
+        }
         return false;
     }
 
@@ -345,9 +365,18 @@ public class Gomoku extends Application {
                     Gomoku.this.switchPlayer();
                 }
             }
+            if(Gomoku.this.hasThreeThree(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
+                getGameMessageTextField().setText("three three detected.");
+            }
+            if(Gomoku.this.hasFourFour(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
+                getGameMessageTextField().setText("four four detected.");
+            }
             if(Gomoku.this.hasExactConsecutiveTiles(getPieces(), buttonRow, buttonCol, getWinRequirement()) && !getGameEnded()){
                 setGameEnded(true);
                 displayWinner(previousTurn);
+            }
+            else{
+                getGameMessageTextField().setText("");
             }
         }
     }
